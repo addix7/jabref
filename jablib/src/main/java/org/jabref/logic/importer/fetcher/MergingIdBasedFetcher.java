@@ -16,6 +16,8 @@ import org.jabref.model.entry.field.StandardField;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jabref.logic.importer.fetcher.INSPIREFetcher;
+
 
 /// Fetches and merges bibliographic information from external sources into existing BibEntry objects.
 /// Supports multiple identifier types (DOI, ISBN, Eprint) and attempts fetching in a defined order
@@ -86,7 +88,7 @@ public class MergingIdBasedFetcher {
             LOGGER.debug("Fetching with {}: {}",
                     fetcher.getClass().getSimpleName(), identifier);
             return fetcher.performSearchById(identifier)
-                          .map(fetchedEntry -> mergeBibEntries(entryFromLibrary, fetchedEntry));
+                          .map(fetchedEntry -> mergeBibEntries(entryFromLibrary, fetchedEntry, fetcher));
         } catch (FetcherException e) {
             LOGGER.error("Fetch failed for {} with identifier: {}",
                     field, identifier, e);
@@ -95,7 +97,7 @@ public class MergingIdBasedFetcher {
     }
 
     private FetcherResult mergeBibEntries(BibEntry entryFromLibrary,
-                                          BibEntry fetchedEntry) {
+                                          BibEntry fetchedEntry, IdBasedFetcher fetcher) {
         BibEntry mergedEntry = new BibEntry(entryFromLibrary.getType());
 
         entryFromLibrary.getFields().forEach(field ->
@@ -104,6 +106,9 @@ public class MergingIdBasedFetcher {
 
         Set<Field> updatedFields = updateFieldsFromSource(fetchedEntry, mergedEntry);
 
+        if (fetcher instanceof INSPIREFetcher){
+            fetchedEntry.getCitationKey().ifPresent(mergedEntry::setCitationKey);
+        }
         return new FetcherResult(entryFromLibrary, mergedEntry,
                 !updatedFields.isEmpty(), updatedFields);
     }
@@ -134,4 +139,3 @@ public class MergingIdBasedFetcher {
         });
     }
 }
-
