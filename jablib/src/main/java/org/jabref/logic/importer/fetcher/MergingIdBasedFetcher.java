@@ -16,8 +16,6 @@ import org.jabref.model.entry.field.StandardField;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jabref.logic.importer.fetcher.INSPIREFetcher;
-
 
 /// Fetches and merges bibliographic information from external sources into existing BibEntry objects.
 /// Supports multiple identifier types (DOI, ISBN, Eprint) and attempts fetching in a defined order
@@ -106,7 +104,7 @@ public class MergingIdBasedFetcher {
 
         Set<Field> updatedFields = updateFieldsFromSource(fetchedEntry, mergedEntry);
 
-        if (fetcher instanceof INSPIREFetcher){
+        if (fetcher instanceof INSPIREFetcher) {
             fetchedEntry.getCitationKey().ifPresent(mergedEntry::setCitationKey);
         }
         return new FetcherResult(entryFromLibrary, mergedEntry,
