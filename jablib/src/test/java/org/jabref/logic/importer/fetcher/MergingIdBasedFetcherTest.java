@@ -1,13 +1,14 @@
 package org.jabref.logic.importer.fetcher;
 
-import org.jabref.logic.importer.ImportFormatPreferences;
-import org.jabref.model.entry.BibEntry;
-import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.jabref.model.entry.BibEntry;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MergingIdBasedFetcherTest {
 
